@@ -1,0 +1,81 @@
+/* style with grid layout. I created 20 row and 20 column grids on the 
+body section to define the layout of the page */
+body {
+    box-sizing: border-box;
+    background-image: url(../images/star_wars_background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 600px;
+}
+
+header {
+    border: 2px solid green;
+    height: 50px;
+}
+
+.battlefield {
+    border: 2px solid blue;
+    position: relative;
+    min-height: 600px;
+}
+
+.character {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid red;
+    width: 10%;
+    min-width: 80px;
+    /* margin: 1em; */
+    position: absolute;
+    /* margin-left: -65px; */
+}
+
+
+.character-name {
+    text-align: center;
+}
+
+.character-avatar {
+    width: 90%;
+    min-width: 70px;
+    margin: 0.25em auto;
+}
+
+.character-health {
+    text-align: center;
+}
+
+.character-attack-points {
+    text-align: center;
+}
+
+.han {
+    top: 5%;
+    left: 49%;
+}
+
+.luke {
+    top: 5%;
+    left: 61%;
+}
+
+.jar-jar {
+    top: 5%;
+    left: 73%;
+}
+
+.vader {
+    top: 5%;
+    left: 85%;
+}
+
+.attack-button {
+    display: none;
+    position: absolute;
+    top: 63%;
+    left: 70%;
+}
+
+.attack-button > img {
+    width: 100px;
+}
