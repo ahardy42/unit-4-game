@@ -1,16 +1,36 @@
 /* style with grid layout. I created 20 row and 20 column grids on the 
 body section to define the layout of the page */
+
+@font-face {
+    font-family: starJedi;
+    src: url(../fonts/Starjedi.ttf);
+}
+
 body {
+    min-height: 600px;
+    font-family: starJedi;
     box-sizing: border-box;
     background-image: url(../images/star_wars_background.jpg);
     background-repeat: no-repeat;
     background-size: cover;
-    min-height: 600px;
 }
 
 header {
     border: 2px solid green;
-    height: 50px;
+    padding: 20px;
+    /* height: 50px; */
+    font-family: starJedi;
+    font-size: 3em;
+}
+
+h5 {
+    font-size: 0.9em;
+    padding: 0.1em;
+}
+
+h6 {
+    font-size: 0.7em;
+    padding: 0.1em;
 }
 
 .battlefield {
@@ -19,15 +39,21 @@ header {
     min-height: 600px;
 }
 
+
+div.character {
+    opacity: 0.7;
+}
+
 .character {
     display: flex;
     flex-direction: column;
-    border: 2px solid red;
+    background-color: black;
+    color: white;
+    border: 2px solid rgb(65, 31, 31);
     width: 10%;
     min-width: 80px;
-    /* margin: 1em; */
     position: absolute;
-    /* margin-left: -65px; */
+    border-radius: 15px 15px 75px 75px;
 }
 
 
@@ -43,10 +69,12 @@ header {
 
 .character-health {
     text-align: center;
+    padding-bottom: 1em;
 }
 
 .character-attack-points {
     text-align: center;
+    padding-bottom: 2em;
 }
 
 .han {
@@ -78,4 +106,39 @@ header {
 
 .attack-button > img {
     width: 100px;
+}
+
+.laser-one {
+    display: none;
+    position: absolute;
+    height: 3px;
+    width: 50px;
+    transform: rotate(-40deg);
+    background-color: #18f703;
+    top: 45%;
+    left: 72%;
+}
+
+.laser-two {
+    display: none;
+    position: absolute;
+    height: 3px;
+    width: 50px;
+    transform: rotate(40deg);
+    background-color: #18f703;
+    top: 45%;
+    left: 72%;
+}
+
+.attack-droid > img {
+    position: absolute;
+    top: 38%;
+    left: 110%;
+    width: 70px;
+}
+
+.explosion > img {
+    display: none;
+    position: absolute;
+    width: 30px;
 }

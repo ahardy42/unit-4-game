@@ -30,19 +30,25 @@ $(document).ready(function () {
         };
         this.attack = function () {
             // this is the function that removes healthPoints from the enemy
+            // then decrement defendCharacter HP
             defendCharacter.healthPoints -= this.attackPoints;
-            $(defendCharacter.className).find("h6.character-health").text(defendCharacter.healthPoints);
+            $(defendCharacter.className).find("h6.character-health").text("Health Points: " + defendCharacter.healthPoints);
             if (defendCharacter.healthPoints <= 0) {
                 defendCharacter.killCharacter();
             } else {
-                this.attacked();
+                // then, shoot the laser at the attackCharacter
+                var thisObject = this;
+                setTimeout(function () {
+                    shootLaserTwo();
+                    thisObject.attacked();
+                }, 1000);
             }
             this.attackIncrease();
         };
         this.attacked = function () {
             // this function removes the player's health points based on the other character's attackPoints value 
             this.healthPoints -= defendCharacter.attackPoints;
-            $(this.className).find("h6.character-health").text(this.healthPoints);
+            $(this.className).find("h6.character-health").text("Health Points: " + this.healthPoints);
             if (this.healthPoints <= 0) {
                 this.killCharacter();
             }
@@ -70,21 +76,44 @@ $(document).ready(function () {
         };
         this.killCharacter = function () {
             // this is called when healthPoints are zero, it runs code that removes the character from the defend position.
+            $()
             $(this.className).animate({
-                opacity: "0",
-                top: "0",
-                left: "0"
-            });
+                opacity: "0"
+            }, 200);
+            var blowUpCharacter = $(".explosion > img")
+            if (this === defendCharacter) {
+                blowUpCharacter.css({
+                    display: "block",
+                    left: "55%",
+                    top: "70%",
+                });
+                blowUpCharacter.animate({
+                    width: "300px",
+                    margin: "-150px 0 0 -100px"
+                }, 200);
+                blowUpCharacter.fadeOut(500);
+            } else {
+                blowUpCharacter.css({
+                    display: "block",
+                    left: "85%",
+                    top: "70%",
+                });
+                blowUpCharacter.animate({
+                    width: "300px",
+                    margin: "-150px 0 0 -100px"
+                }, 200);
+                blowUpCharacter.fadeOut(500);
+            }
             // this allows you to click on a new character after winning.
             clickCounter = 1;
         };
     }
 
     // creating some instances of the characters which I will use to populate HTML in the game
-    var hanSolo = new Character("Han Solo", ".han", "assets/images/Han_Solo.jpg", 150, 20, 5, 25);
+    var hanSolo = new Character("Han Solo", ".han", "assets/images/Han_Solo.jpg", 15, 20, 5, 25);
     var lukeSkywalker = new Character("Luke Skywalker", ".luke", "assets/images/luke.jpg", 130, 25, 3, 20);
     var jarJar = new Character("Jar-Jar Binks", ".jar-jar", "assets/images/jar-jar-binks.jpg", 100, 10, 15, 5);
-    var darthVader = new Character("Darth Vader", ".vader", "assets/images/Vader.jpg", 140, 15, 10, 30);
+    var darthVader = new Character("Darth vader", ".vader", "assets/images/Vader.jpg", 140, 15, 10, 30);
 
     // putting the character objets into an array so that I can build the page info with an array iterator. 
     var characters = [hanSolo, lukeSkywalker, jarJar, darthVader];
@@ -94,23 +123,66 @@ $(document).ready(function () {
 
     // this runs the code which displays a game over screen when the attacker has no healthPoints
     function gameOver() {
+        // first, remove all the characters from the screen
+
+        // then show the scrolling text div with the game over text
 
     }
 
     // this runs the code which displays a "you win" screen when all enemies have been defeated. 
     function youWin() {
+        // winning character moves to the center of the screen and toggles from big / small twice then explodes 
+        
+
+    }
+
+    function shootLaserOne() {
+        var laserBeam = $(".laser-one");
+        laserBeam.fadeIn(10);
+        laserBeam.animate({
+            left: "60%",
+            top: "60%",
+        }, 100);
+        laserBeam.fadeOut(10);
+        laserBeam.css({ top: "45%", left: "72%" });
+    }
+
+    function shootLaserTwo() {
+        var laserBeam = $(".laser-two");
+        laserBeam.fadeIn(10);
+        laserBeam.animate({
+            left: "85%",
+            top: "60%",
+        }, 100);
+        laserBeam.fadeOut(10);
+        laserBeam.css({ top: "45%", left: "72%" });
+    }
+
+    function explodeCharacter() {
 
     }
 
     // page building code goes here
 
     // displaying information about each character on the page. 
-    characters.forEach(function(character) {
+    characters.forEach(function (character) {
         $(character.className).find("h5").text(character.name);
         $(character.className).find("img").attr("src", character.picture);
-        $(character.className).find("h6.character-health").text(character.healthPoints);
-        $(character.className).find("h6.character-attack-points").text(character.attackPoints);
+        $(character.className).find("h6.character-health").text("Health Points: " + character.healthPoints);
+        $(character.className).find("h6.character-attack-points").text("Attack Points: " + character.attackPoints);
     });
+
+    // creating the "laser" 
+    // think about going to: https://www.w3schools.com/tags/tag_area.asp to map this to a specific point on the picture. 
+    var laserOne = $(".battlefield").append("<div class='laser-one'>");
+    var laserTwo = $(".battlefield").append("<div class='laser-two'>");
+
+    // creating the explosion div and image w/ jQuery just for funsies
+    var explosion = $(".battlefield").append("<div class='explosion'>");
+    $(".explosion").append("<img>");
+    var explosionImg = $(".explosion").find("img");
+    explosionImg.attr("src", "assets/images/explosion.png");
+
 
     // onclick functions go here 
 
@@ -128,23 +200,33 @@ $(document).ready(function () {
             console.log("defend character is", defendCharacter);
             // code to build and show the attack button when the defend character is chosen.
             var button = $(".attack-button");
-            // button.attr("onclick", "attackCharacter.attack()");
-            button.fadeIn("slow");
-            console.log("health points were", defendCharacter.healthPoints);
-            // attackCharacter.attack();
-            console.log("health points are", defendCharacter.healthPoints);
+            button.fadeIn(2000);
         } else {
-            alert("you have already picked the players");
+            alert("you have already picked the players, it's time to attack!");
         }
     });
 
     // the attack function tied to the attack button. 
-    $(".attack-button").on("click", function() {
-        console.log(clickCounter);
+    $(".attack-button").on("click", function () {
+        // it's not visible, but it's still there so this makes sure you can't attack w/out choosing players
         if (clickCounter === 2) {
-            attackCharacter.attack();
+            // first the attack droid flies in from the right
+            $(".attack-droid > img").animate({ left: "70%" }, 2000);
+            // then the attack sequence is carried out
+            setTimeout(function () {
+                shootLaserOne();
+                attackCharacter.attack();
+            }, 2500);
+
+            // then the droid flies back to the right
+            setTimeout(function () {
+                $(".attack-droid > img").animate({ left: "110%" }, 2000);
+            }, 4000);
+
         }
     });
+
+
 
 
 
