@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    // all functions go here! 
+    // all code goes inside! 
 
     // global variables go here
 
@@ -12,21 +12,25 @@ $(document).ready(function () {
     // will use this to check if an attacker has been set.
     var clickCounter = 0;
 
+    // used to check how many characters have been killed
+    var deathToll = 0;
+
     // character objects go here
 
     // constructor for each character object. this makes it easier to modify code for methods without having
     // to cut and past a million times. and, looks better. 
-    function Character(playerName, playerClass, pic, health, attack, power, counterAttack) {
+    function Character(playerName, playerClass, pic, health, attack, power) {
         this.name = playerName;
         this.className = playerClass;
         this.picture = pic;
         this.healthPoints = health;
         this.attackPoints = attack;
         this.attackPower = power;
-        this.counterAttackPower = counterAttack;
+        this.isDead = false;
         this.attackIncrease = function () {
-            // increases attackpoints by adding attackpower to the value
+            // increases attackpoints by adding attackpower to the value and then displays the new value
             this.attackPoints += this.attackPower;
+            $(this.className).find("h6.character-attack-points").text("Attack Points: " + this.attackPoints);
         };
         this.attack = function () {
             // this is the function that removes healthPoints from the enemy
@@ -76,7 +80,8 @@ $(document).ready(function () {
         };
         this.killCharacter = function () {
             // this is called when healthPoints are zero, it runs code that removes the character from the defend position.
-            $()
+            this.isDead = true;
+            deathToll++;
             $(this.className).animate({
                 opacity: "0"
             }, 200);
@@ -110,7 +115,7 @@ $(document).ready(function () {
     }
 
     // creating some instances of the characters which I will use to populate HTML in the game
-    var hanSolo = new Character("Han Solo", ".han", "assets/images/Han_Solo.jpg", 15, 20, 5, 25);
+    var hanSolo = new Character("Han Solo", ".han", "assets/images/Han_Solo.jpg", 150, 20, 5, 25);
     var lukeSkywalker = new Character("Luke Skywalker", ".luke", "assets/images/luke.jpg", 130, 25, 3, 20);
     var jarJar = new Character("Jar-Jar Binks", ".jar-jar", "assets/images/jar-jar-binks.jpg", 100, 10, 15, 5);
     var darthVader = new Character("Darth vader", ".vader", "assets/images/Vader.jpg", 140, 15, 10, 30);
@@ -124,16 +129,27 @@ $(document).ready(function () {
     // this runs the code which displays a game over screen when the attacker has no healthPoints
     function gameOver() {
         // first, remove all the characters from the screen
-
-        // then show the scrolling text div with the game over text
-
+            $(".character").fadeOut(2000);
+            $(".attack-button").fadeOut(2000);
+        setTimeout(function() {
+            // then show the game over text
+            $(".battlefield").append("<div class='game-over'>");
+            var gameOverDiv = $(".battlefield").find(".game-over");
+            gameOverDiv.append("<p>You Lose!!!</p>");
+        }, 2001);
     }
 
     // this runs the code which displays a "you win" screen when all enemies have been defeated. 
     function youWin() {
-        // winning character moves to the center of the screen and toggles from big / small twice then explodes 
-        
-
+                // first, remove all the characters from the screen
+                $(".character").fadeOut(2000);
+                $(".attack-button").fadeOut(2000);
+            setTimeout(function() {
+                // then show the game over text
+                $(".battlefield").append("<div class='game-over'>");
+                var gameOverDiv = $(".battlefield").find(".game-over");
+                gameOverDiv.append("<p>You Win!!!</p>");
+            }, 2001); 
     }
 
     function shootLaserOne() {
@@ -156,10 +172,6 @@ $(document).ready(function () {
         }, 100);
         laserBeam.fadeOut(10);
         laserBeam.css({ top: "45%", left: "72%" });
-    }
-
-    function explodeCharacter() {
-
     }
 
     // page building code goes here
@@ -199,15 +211,15 @@ $(document).ready(function () {
             clickCounter++;
             console.log("defend character is", defendCharacter);
             // code to build and show the attack button when the defend character is chosen.
-            var button = $(".attack-button");
-            button.fadeIn(2000);
+            var buttons = $(".attack-button");
+            buttons.fadeIn(2000);
         } else {
             alert("you have already picked the players, it's time to attack!");
         }
     });
 
     // the attack function tied to the attack button. 
-    $(".attack-button").on("click", function () {
+    $("#button").on("click", function () {
         // it's not visible, but it's still there so this makes sure you can't attack w/out choosing players
         if (clickCounter === 2) {
             // first the attack droid flies in from the right
@@ -217,13 +229,48 @@ $(document).ready(function () {
                 shootLaserOne();
                 attackCharacter.attack();
             }, 2500);
-
             // then the droid flies back to the right
             setTimeout(function () {
                 $(".attack-droid > img").animate({ left: "110%" }, 2000);
             }, 4000);
-
         }
+        // checks to see if you won or lost, after the droid flies away. then displays win or lose screen. 
+        setTimeout(function() {
+            if (attackCharacter.isDead) {
+                gameOver();
+            } else if (deathToll === 3) {
+                youWin();
+            }
+        }, 4001);
+    });
+
+    $("#reset").on("click", function () {
+        // reset players position and values
+        hanSolo.healthPoints = 150;
+        hanSolo.attackPoints = 20;
+        lukeSkywalker.healthPoints = 130;
+        lukeSkywalker.attackPoints = 25;
+        jarJar.healthPoints = 100;
+        jarJar.attackPoints = 10;
+        darthVader.healthPoints = 140;
+        darthVader.attackPoints = 15;
+
+        // display values
+        characters.forEach(function (character) {
+            // $(character.className).html()
+            $(character.className).removeAttr("style");
+            $(character.className).find("h6.character-health").text("Health Points: " + character.healthPoints);
+            $(character.className).find("h6.character-attack-points").text("Attack Points: " + character.attackPoints);
+        });
+        
+        // hide buttons
+        $(".attack-button").removeAttr("style");
+
+        // reset characters
+        attackCharacter = {};
+        defendCharacter = {};
+        // reset clickCounter 
+        clickCounter = 0;
     });
 
 
@@ -232,7 +279,4 @@ $(document).ready(function () {
 
 
 
-
-
-
-});
+})

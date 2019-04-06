@@ -16,7 +16,6 @@ body {
 }
 
 header {
-    border: 2px solid green;
     padding: 20px;
     /* height: 50px; */
     font-family: starJedi;
@@ -29,12 +28,11 @@ h5 {
 }
 
 h6 {
-    font-size: 0.7em;
+    font-size: 0.6em;
     padding: 0.1em;
 }
 
 .battlefield {
-    border: 2px solid blue;
     position: relative;
     min-height: 600px;
 }
@@ -74,7 +72,7 @@ div.character {
 
 .character-attack-points {
     text-align: center;
-    padding-bottom: 2em;
+    padding-bottom: 3em;
 }
 
 .han {
@@ -100,12 +98,26 @@ div.character {
 .attack-button {
     display: none;
     position: absolute;
-    top: 63%;
-    left: 70%;
+    width: 15%;
+    top: 58%;
+    left: 67.5%;
 }
 
-.attack-button > img {
-    width: 100px;
+.button {
+    width: 100%;
+    background-color: black;
+    opacity: 0.7;
+    font-family: starJedi;
+    font-size: 1.5em;
+    color: white;
+    padding: 0.5em 0;
+    margin: 0.5em 0;
+    border: 2px solid rgb(73, 36, 36);
+    border-radius: 0.5em;
+}
+
+.button:hover {
+    opacity: 1;
 }
 
 .laser-one {
@@ -141,4 +153,13 @@ div.character {
     display: none;
     position: absolute;
     width: 30px;
+}
+
+.game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-family: starJedi;
+    font-size: 5em;
+    text-align: center;
 }
