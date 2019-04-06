@@ -253,6 +253,9 @@ $(document).ready(function () {
 
     // this is the onclick function logic for picking the attack player, and the defenders
     $(".character").on("click", function () {
+        console.log($(this).find("character-name").text());
+            console.log(attackCharacter.className);
+            console.log(clickCounter);
         if (clickCounter === 0) {
             index = $(this).attr("value");
             characters[index].chosenForAttack();
@@ -264,6 +267,8 @@ $(document).ready(function () {
             $(".instructions").animate({ opacity: "0" });
             $(".han > .character-health").removeAttr("style");
             $(".han > .character-attack-points").removeAttr("style");
+        } else if ($(this).find(".character-name").text() === attackCharacter.name) {
+            alert("you can't click the same character twice!");
         } else if (clickCounter === 1) {
             index = $(this).attr("value");
             characters[index].chosenForDefend();
