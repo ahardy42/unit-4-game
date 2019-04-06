@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    // all code goes inside! 
+    // ------------------------------- all code goes inside! ----------------------------
 
-    // global variables go here
+    // ------------------------------- global variables go here ---------------------------
 
     // this variable will hold the object which is in the attack position
     var attackCharacter = {};
@@ -15,7 +15,20 @@ $(document).ready(function () {
     // used to check how many characters have been killed
     var deathToll = 0;
 
-    // character objects go here
+    // instructions paragraph html strings
+    var instructions = [
+        "Click to go through instructions.",
+        "Each character has a set amount of <span style='color: red'>Health Points</span> and <span style='color: green'>Attack Points</span>.<br><br> An attack will reduce the attacked player’s <span style='color: red'>Health Points</span> by the value of <span style='color: green'>Attack Points</span>.",
+        "First, click on a character you want to be the <span style='color: red'>Attacker</span>. Then, click on the character you want to be the first <span style='color: green'>Defender</span>.",
+        "Each attack, the <span style='color: red'>Attacker</span> gains attack points, but, the <span style='color: green'>Defender</span> doesn’t. Choose your <span style='color: red'>Attacker</span> wisely...<br><br> Defeat all <span style='color: green'>Defenders</span> and you win!  <br><br>Lose all your Health Points and you lose...",
+        "Each time you click the Attack button, the defender is attacked by a droid...<br><br> <span style='font-size: 1.2em'>but...</span><br><br> the droid is then taken over by the <span style='color: green'>Defender</span> briefly, and forces it to counter-attack...",
+        "Good Luck, and... <br><br><span style='font-size: 2em; text-align: center; color: rgb(253,206,3)'>May the force be with you!</span>",
+    ];
+
+    // this is used in the onclick function for the instructions to scroll through the paragraphs
+    var instructionsIndex = 0;
+
+    // ------------------------------- character objects go here ----------------------------------
 
     // constructor for each character object. this makes it easier to modify code for methods without having
     // to cut and past a million times. and, looks better. 
@@ -47,6 +60,7 @@ $(document).ready(function () {
                     thisObject.attacked();
                 }, 1000);
             }
+            // increases attackpoints for the attacking character
             this.attackIncrease();
         };
         this.attacked = function () {
@@ -76,10 +90,11 @@ $(document).ready(function () {
                 left: "55%",
                 top: "60%"
             });
-            $(".character").removeClass("defend");
         };
         this.killCharacter = function () {
             // this is called when healthPoints are zero, it runs code that removes the character from the defend position.
+            // it also runs code that blows the character up, and increases deathToll which is used to determine if you 
+            // won.  this.isDead is used to determine if you lost (if you're in the attacking position)
             this.isDead = true;
             deathToll++;
             $(this.className).animate({
@@ -115,23 +130,23 @@ $(document).ready(function () {
     }
 
     // creating some instances of the characters which I will use to populate HTML in the game
-    var hanSolo = new Character("Han Solo", ".han", "assets/images/Han_Solo.jpg", 150, 20, 5, 25);
-    var lukeSkywalker = new Character("Luke Skywalker", ".luke", "assets/images/luke.jpg", 130, 25, 3, 20);
-    var jarJar = new Character("Jar-Jar Binks", ".jar-jar", "assets/images/jar-jar-binks.jpg", 100, 10, 15, 5);
-    var darthVader = new Character("Darth vader", ".vader", "assets/images/Vader.jpg", 140, 15, 10, 30);
+    var hanSolo = new Character("Han Solo", ".han", "assets/images/Han_Solo.jpg", 150, 20, 5);
+    var lukeSkywalker = new Character("Luke Skywalker", ".luke", "assets/images/luke.jpg", 130, 25, 3);
+    var jarJar = new Character("Jar-Jar Binks", ".jar-jar", "assets/images/jar-jar-binks.jpg", 115, 10, 15);
+    var darthVader = new Character("Darth vader", ".vader", "assets/images/Vader.jpg", 140, 15, 10);
 
     // putting the character objets into an array so that I can build the page info with an array iterator. 
     var characters = [hanSolo, lukeSkywalker, jarJar, darthVader];
 
 
-    // global functions go here
+    // ---------------------------- global functions go here -----------------------------
 
     // this runs the code which displays a game over screen when the attacker has no healthPoints
     function gameOver() {
-        // first, remove all the characters from the screen
-            $(".character").fadeOut(2000);
-            $(".attack-button").fadeOut(2000);
-        setTimeout(function() {
+        // first, remove all the characters from the screen, leave reset button
+        $(".character").fadeOut(2000);
+        $("#button").animate({ opacity: "0" }, 1000);
+        setTimeout(function () {
             // then show the game over text
             $(".battlefield").append("<div class='game-over'>");
             var gameOverDiv = $(".battlefield").find(".game-over");
@@ -141,17 +156,19 @@ $(document).ready(function () {
 
     // this runs the code which displays a "you win" screen when all enemies have been defeated. 
     function youWin() {
-                // first, remove all the characters from the screen
-                $(".character").fadeOut(2000);
-                $(".attack-button").fadeOut(2000);
-            setTimeout(function() {
-                // then show the game over text
-                $(".battlefield").append("<div class='game-over'>");
-                var gameOverDiv = $(".battlefield").find(".game-over");
-                gameOverDiv.append("<p>You Win!!!</p>");
-            }, 2001); 
+        // first, remove all the characters from the screen
+        $(".character").fadeOut(2000);
+        $("#button").animate({ opacity: "0" }, 1000);
+        setTimeout(function () {
+            // then show the game over text
+            $(".battlefield").append("<div class='game-over'>");
+            var gameOverDiv = $(".battlefield").find(".game-over");
+            gameOverDiv.append("<p>You Win!!!</p>");
+        }, 2001);
+        // then show reset button 
     }
 
+    // sharks with fricken laser beams
     function shootLaserOne() {
         var laserBeam = $(".laser-one");
         laserBeam.fadeIn(10);
@@ -174,7 +191,11 @@ $(document).ready(function () {
         laserBeam.css({ top: "45%", left: "72%" });
     }
 
-    // page building code goes here
+    // ------------------------    page building code goes here -------------------------
+
+    // display the initial instructions to the screen
+    $("#instructions-header").text("How To Play:");
+    $("#instructions").html(instructions[instructionsIndex]);
 
     // displaying information about each character on the page. 
     characters.forEach(function (character) {
@@ -185,7 +206,6 @@ $(document).ready(function () {
     });
 
     // creating the "laser" 
-    // think about going to: https://www.w3schools.com/tags/tag_area.asp to map this to a specific point on the picture. 
     var laserOne = $(".battlefield").append("<div class='laser-one'>");
     var laserTwo = $(".battlefield").append("<div class='laser-two'>");
 
@@ -196,7 +216,40 @@ $(document).ready(function () {
     explosionImg.attr("src", "assets/images/explosion.png");
 
 
-    // onclick functions go here 
+    // ---------------------------- onclick functions go here ------------------------------
+
+    // onclick functions for the instructions screen
+    $(".instructions").on("click", function () {
+        instructionsIndex++;
+        if (instructionsIndex < instructions.length) {
+            $("#instructions").html(instructions[instructionsIndex]);
+            console.log(instructionsIndex);
+            // on the second paragraph this highlights the healt and attack points on a character
+            if (instructionsIndex === 1) {
+                $(".han > .character-health").css({
+                    "border-style": "solid",
+                    "border-width": "5px",
+                    "border-color": "red",
+                    "border-radius": "10px",
+                    "padding": "1em",
+                });
+                $(".han > .character-attack-points").css({
+                    "border-style": "solid",
+                    "border-width": "5px",
+                    "border-color": "green",
+                    "border-radius": "10px",
+                    "padding": "1em",
+                });
+            // then remove the highlighting from the character
+            } else if (instructionsIndex === 2) {
+                $(".han > .character-health").removeAttr("style");
+                $(".han > .character-attack-points").removeAttr("style");
+            }
+        } else {
+            // when you get to the end of the instructions, hide them!
+            $(".instructions").animate({ opacity: "0" });
+        }
+    });
 
     // this is the onclick function logic for picking the attack player, and the defenders
     $(".character").on("click", function () {
@@ -204,12 +257,19 @@ $(document).ready(function () {
             index = $(this).attr("value");
             characters[index].chosenForAttack();
             clickCounter++;
-            console.log("attack character is", attackCharacter);
+            // show that this is the "attacker"
+            $(attackCharacter.className).children("h6:first").before("<h5 class='attacker'>Attacker</h5>");
+            // hide instructions
+            instructionsIndex = 0;
+            $(".instructions").animate({ opacity: "0" });
+            $(".han > .character-health").removeAttr("style");
+            $(".han > .character-attack-points").removeAttr("style");
         } else if (clickCounter === 1) {
             index = $(this).attr("value");
             characters[index].chosenForDefend();
             clickCounter++;
-            console.log("defend character is", defendCharacter);
+            // show that this is the "defender"
+            $(defendCharacter.className).children("h6:first").before("<h5 class='defender'>Defender</h5>");
             // code to build and show the attack button when the defend character is chosen.
             var buttons = $(".attack-button");
             buttons.fadeIn(2000);
@@ -235,7 +295,7 @@ $(document).ready(function () {
             }, 4000);
         }
         // checks to see if you won or lost, after the droid flies away. then displays win or lose screen. 
-        setTimeout(function() {
+        setTimeout(function () {
             if (attackCharacter.isDead) {
                 gameOver();
             } else if (deathToll === 3) {
@@ -245,38 +305,44 @@ $(document).ready(function () {
     });
 
     $("#reset").on("click", function () {
-        // reset players position and values
+        // reset players position and values. this works, but should be updated at some point to make it easier to 
+        // modify the values (and not have to do it above as well)
         hanSolo.healthPoints = 150;
         hanSolo.attackPoints = 20;
         lukeSkywalker.healthPoints = 130;
         lukeSkywalker.attackPoints = 25;
-        jarJar.healthPoints = 100;
+        jarJar.healthPoints = 115;
         jarJar.attackPoints = 10;
         darthVader.healthPoints = 140;
         darthVader.attackPoints = 15;
 
-        // display values
+        // display values and reset this.isDead to false
         characters.forEach(function (character) {
-            // $(character.className).html()
+            character.isDead = false;
+            $(character.className).find(".attacker, .defender").remove();
             $(character.className).removeAttr("style");
             $(character.className).find("h6.character-health").text("Health Points: " + character.healthPoints);
             $(character.className).find("h6.character-attack-points").text("Attack Points: " + character.attackPoints);
         });
-        
-        // hide buttons
-        $(".attack-button").removeAttr("style");
 
-        // reset characters
+        // reset opacity of the attack button and instructions
+        $(".instructions").removeAttr("style");
+        $("#button").removeAttr("style");
+        // hide buttons and win/lose message
+        $(".attack-button").removeAttr("style");
+        $(".game-over").remove();
+        // show instructions
+        $("#instructions-header").text("How To Play:");
+        instructionsIndex = 0;
+        $("#instructions").html(instructions[instructionsIndex]);
+        $(".instructions").removeAttr("style");
+
+        // reset characters and declaration of attack + defend
         attackCharacter = {};
         defendCharacter = {};
-        // reset clickCounter 
+        // reset clickCounter and deathToll
         clickCounter = 0;
+        deathToll = 0;
+
     });
-
-
-
-
-
-
-
 })

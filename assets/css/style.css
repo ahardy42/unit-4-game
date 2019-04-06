@@ -37,6 +37,28 @@ h6 {
     min-height: 600px;
 }
 
+.instructions {
+    width: 40%;
+    min-height: 300px;
+    background-color: black;
+    color: white;
+    opacity: 0.7;
+    margin: 1em;
+    border: 2px solid rgb(65, 31, 31);
+    border-radius: 30px;
+}
+
+.instructions > h3 {
+    font-size: 2em;
+    padding: 1em;
+    text-align: center;
+}
+
+.instructions > p {
+    font-size: 1em;
+    padding: 1em;
+    text-align: justify;
+}
 
 div.character {
     opacity: 0.7;
@@ -54,6 +76,20 @@ div.character {
     border-radius: 15px 15px 75px 75px;
 }
 
+.attacker {
+    text-align: center;
+    font-size: 0.7em;
+    padding-bottom: 1em;
+    color: red;
+}
+
+.defender {
+    text-align: center;
+    font-size: 0.7em;
+    padding-bottom: 1em;
+    color: green;
+}
+
 
 .character-name {
     text-align: center;
@@ -67,12 +103,12 @@ div.character {
 
 .character-health {
     text-align: center;
-    padding-bottom: 1em;
+    padding: 0 1em 1em 1em;
 }
 
 .character-attack-points {
     text-align: center;
-    padding-bottom: 3em;
+    padding: 0 1em 3em 1em;
 }
 
 .han {
