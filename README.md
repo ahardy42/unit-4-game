@@ -18,3 +18,5 @@ Each character can win this game, but, you must carefully chose your strategy fo
 if you want to start over, click the "reset" button and play is reset. 
 
 Enjoy!
+
+Here's a link to the live game: https://ahardy42.github.io/unit-4-game/
